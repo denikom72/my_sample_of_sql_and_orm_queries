@@ -109,7 +109,11 @@ FROM (
 GROUP BY 
     Region, EmployeeName;
 
-__
+--
+
+-- retrieving data from hypothetical 
+-- "Sales," "Products," "Customers," and "Categories" tables to calculate the total sales for each category
+-- within a specified date range, with additional filtering for high-value customers
 
 WITH HighValueCustomers AS (
     SELECT 
