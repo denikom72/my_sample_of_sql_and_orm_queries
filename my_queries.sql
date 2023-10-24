@@ -109,4 +109,46 @@ FROM (
 GROUP BY 
     Region, EmployeeName;
 
+__
+
+WITH HighValueCustomers AS (
+    SELECT 
+        CustomerID
+    FROM 
+        Customers
+    WHERE 
+        TotalPurchases > 10000
+),
+CategoryTotalSales AS (
+    SELECT 
+        C.CategoryName, SUM(S.UnitPrice * S.Quantity) AS TotalSales
+    FROM 
+        Sales S
+    INNER JOIN 
+        Products P 
+    ON 
+        S.ProductID = P.ProductID
+    INNER JOIN 
+        Categories C 
+    ON 
+        P.CategoryID = C.CategoryID
+    WHERE 
+        S.OrderDate BETWEEN '2023-01-01' AND '2023-12-31'
+    GROUP BY 
+        C.CategoryName
+)
+SELECT 
+    CTS.CategoryName, C.CustomerName, CTS.TotalSales
+FROM 
+    CategoryTotalSales CTS
+INNER JOIN 
+    HighValueCustomers HVC 
+ON 
+    CTS.CustomerID = HVC.CustomerID
+INNER JOIN 
+    Customers C 
+ON 
+    HVC.CustomerID = C.CustomerID;
+
+
 
