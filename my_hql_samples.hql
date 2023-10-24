@@ -18,23 +18,28 @@ SELECT h.productName,
        SUM(CASE WHEN h.region = 'South' THEN h.quantity ELSE 0 END) AS South
 FROM HugeSalesData h
 GROUP BY h.productName
+
 //MedianSales
 SELECT h.year, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY h.monthlySales) AS medianSales
 FROM LargeSalesData h
 GROUP BY h.year
+
 //CustomerOrders
 SELECT c.customerName, o.orderDate
 FROM Customer c
 JOIN c.orders o
 WHERE o.orderDate >= '2023-01-01' AND o.orderDate <= '2023-12-31'
+
 //MedianSalesByYear
 SELECT h.year, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY h.monthlySales) AS medianSales
 FROM LargeSalesData h
 GROUP BY h.year
+
 //
 SELECT e.department, AVG(e.salary) AS avgSalary
 FROM EmployeeSalaries e
 GROUP BY e.department
+
 //
 SELECT h.region, e.employeeName, SUM(h.totalSales) AS employeeRegionSales
 FROM (
@@ -48,8 +53,9 @@ FROM (
     GROUP BY c.region, e.employeeName, o.orderId
 ) h
 GROUP BY h.region, h.employeeName
+
 //
-  WITH HighValueCustomers AS (
+WITH HighValueCustomers AS (
     SELECT c.customerId
     FROM Customer c
     WHERE c.totalPurchases > 10000
@@ -70,6 +76,7 @@ JOIN HighValueCustomers hvc
 ON cts.customerId = hvc.customerId
 JOIN Customer c
 ON hvc.customerId = c.customerId
+
 /*
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
