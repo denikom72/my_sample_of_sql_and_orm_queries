@@ -78,3 +78,35 @@ SELECT
 FROM 
   EmployeeSalaries;
 
+--
+
+SELECT 
+    Region, EmployeeName, SUM(TotalSales) AS EmployeeRegionSales
+FROM (
+    SELECT 
+        Region, EmployeeName, TotalSales
+    FROM (
+        SELECT 
+            C.Region, E.EmployeeName, O.OrderID, SUM(OD.UnitPrice * OD.Quantity) AS TotalSales
+        FROM 
+            Customers C
+        INNER JOIN 
+            Orders O 
+        ON 
+            C.CustomerID = O.CustomerID
+        INNER JOIN 
+            Employees E 
+        ON 
+            O.EmployeeID = E.EmployeeID
+        INNER JOIN 
+            OrderDetails OD 
+        ON 
+            O.OrderID = OD.OrderID
+        GROUP BY 
+            C.Region, E.EmployeeName, O.OrderID
+    ) AS Subquery1
+) AS Subquery2
+GROUP BY 
+    Region, EmployeeName;
+
+
